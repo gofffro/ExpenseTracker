@@ -1,0 +1,16 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /home/thinkpad/AndroidStudioProjects/ExpenseTracker/domain/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest13276088459698794299.xml:2:13-83
+INJECTED from /home/thinkpad/AndroidStudioProjects/ExpenseTracker/domain/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest13276088459698794299.xml:2:13-83
+	package
+		INJECTED from /home/thinkpad/AndroidStudioProjects/ExpenseTracker/domain/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest13276088459698794299.xml
+	xmlns:android
+		ADDED from /home/thinkpad/AndroidStudioProjects/ExpenseTracker/domain/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest13276088459698794299.xml:2:23-81
+uses-sdk
+INJECTED from /home/thinkpad/AndroidStudioProjects/ExpenseTracker/domain/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest13276088459698794299.xml reason: use-sdk injection requested
+INJECTED from /home/thinkpad/AndroidStudioProjects/ExpenseTracker/domain/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest13276088459698794299.xml
+INJECTED from /home/thinkpad/AndroidStudioProjects/ExpenseTracker/domain/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest13276088459698794299.xml
+	android:targetSdkVersion
+		INJECTED from /home/thinkpad/AndroidStudioProjects/ExpenseTracker/domain/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest13276088459698794299.xml
+	android:minSdkVersion
+		INJECTED from /home/thinkpad/AndroidStudioProjects/ExpenseTracker/domain/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest13276088459698794299.xml
