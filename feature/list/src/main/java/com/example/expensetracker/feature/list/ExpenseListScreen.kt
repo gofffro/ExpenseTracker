@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -30,7 +31,8 @@ import android.view.ViewGroup
 fun ExpenseListScreen(
     viewModel: ExpenseListViewModel = hiltViewModel(),
     onAddExpenseClick: () -> Unit,
-    onExpenseClick: (Expense) -> Unit
+    onExpenseClick: (Expense) -> Unit,
+    onAboutClick: () -> Unit
 ) {
     val expenses by viewModel.allExpenses.collectAsState()
     val totalAmount by viewModel.totalAmount.collectAsState()
@@ -40,6 +42,11 @@ fun ExpenseListScreen(
         topBar = {
             TopAppBar(
                 title = { Text("Expense Tracker") },
+                actions = {
+                    IconButton(onClick = onAboutClick) {
+                        Icon(Icons.Default.Info, contentDescription = "About")
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer

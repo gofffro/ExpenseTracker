@@ -2,6 +2,7 @@ package com.example.expensetracker.feature.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.expensetracker.core.analytics.AnalyticsService
 import com.example.expensetracker.domain.model.Expense
 import com.example.expensetracker.domain.usecase.GetExpensesUseCase
 import com.example.expensetracker.domain.usecase.GetTotalAmountUseCase
@@ -17,7 +18,8 @@ import javax.inject.Inject
 class ExpenseListViewModel @Inject constructor(
     private val getExpensesUseCase: GetExpensesUseCase,
     private val getTotalAmountUseCase: GetTotalAmountUseCase,
-    private val deleteExpenseUseCase: DeleteExpenseUseCase
+    private val deleteExpenseUseCase: DeleteExpenseUseCase,
+    private val analyticsService: AnalyticsService
 ) : ViewModel() {
 
     private val _allExpenses = MutableStateFlow<List<Expense>>(emptyList())
@@ -29,6 +31,11 @@ class ExpenseListViewModel @Inject constructor(
     init {
         loadExpenses()
         loadTotalAmount()
+        trackScreenView()
+    }
+
+    private fun trackScreenView() {
+        analyticsService.trackEvent("screen_viewed", mapOf("screen_name" to "ExpenseList"))
     }
 
     private fun loadExpenses() {
@@ -50,10 +57,12 @@ class ExpenseListViewModel @Inject constructor(
     fun deleteExpense(expense: Expense) {
         viewModelScope.launch {
             deleteExpenseUseCase(expense)
+            analyticsService.trackEvent("expense_deleted", mapOf("category" to expense.category))
         }
     }
 
     fun filterByCategory(category: String) {
+        analyticsService.trackEvent("category_filtered", mapOf("category" to category))
         viewModelScope.launch {
             getExpensesUseCase(category).collectLatest {
                 _allExpenses.value = it
