@@ -54,15 +54,6 @@ fun LoginScreen(
             )
 
             Button(
-                onClick = { viewModel.loginWithVk(activity) },
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .padding(8.dp)
-            ) {
-                Text("Login with VK")
-            }
-
-            Button(
                 onClick = { viewModel.loginWithYandex(activity) },
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
@@ -78,9 +69,9 @@ fun LoginScreen(
                     .padding(8.dp)
             ) {
                 Text("Login as Guest")
-                }
+            }
 
-                Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             TextButton(
                 onClick = { viewModel.triggerTestCrash() }

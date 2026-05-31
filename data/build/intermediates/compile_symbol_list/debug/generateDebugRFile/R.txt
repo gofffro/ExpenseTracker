@@ -1,0 +1,3 @@
+int raw russian_trusted_root_ca 0x0
+int raw russian_trusted_root_ca_gost_2025 0x0
+int raw russian_trusted_sub_ca 0x0

@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.expensetracker"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -38,6 +38,22 @@ android {
             "\"${localProperties["yandex_maps_api_key"] ?: localProperties["appmetrica_api_key"]}\""
         )
         manifestPlaceholders["YANDEX_CLIENT_ID"] = localProperties["yandex_client_id"]?.toString() ?: ""
+    }
+
+    flavorDimensions.add("version")
+    productFlavors {
+        create("free") {
+            dimension = "version"
+            applicationIdSuffix = ".free"
+            versionNameSuffix = "-free"
+            buildConfigField("boolean", "IS_PAID", "false")
+        }
+        create("paid") {
+            dimension = "version"
+            applicationIdSuffix = ".paid"
+            versionNameSuffix = "-paid"
+            buildConfigField("boolean", "IS_PAID", "true")
+        }
     }
 
     buildTypes {
@@ -84,6 +100,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.javax.inject)
     
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
@@ -105,10 +122,14 @@ dependencies {
 
     implementation(libs.appmetrica.analytics)
     implementation(libs.yandex.authsdk)
-    implementation(libs.vk.sdk.core)
-    implementation(libs.vk.sdk.api)
     implementation(libs.androidx.security.crypto)
     implementation(libs.yandex.maps.mobile)
+    implementation(libs.androidx.work.runtime.ktx)
+    
+    // Сеть (нужно здесь для DI)
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.gson)
+    implementation(libs.okhttp.logging)
 
     // Firebase
     implementation(platform(libs.firebase.bom))

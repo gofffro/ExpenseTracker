@@ -40,7 +40,6 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
     
-    implementation(libs.vk.sdk.core)
     implementation(libs.yandex.authsdk)
 
     implementation(platform(libs.firebase.bom))

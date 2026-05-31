@@ -12,6 +12,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.example.expensetracker.core.analytics.AnalyticsService
 import com.example.expensetracker.core.remoteconfig.RemoteConfigService
 import com.yandex.mapkit.MapKitFactory
@@ -114,26 +117,39 @@ fun YandexMap(
 ) {
     val context = LocalContext.current
     val mapView = remember { MapView(context) }
+    val lifecycleOwner = LocalLifecycleOwner.current
 
-    DisposableEffect(mapView) {
-        mapView.onStart()
-        MapKitFactory.getInstance().onStart()
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_START -> {
+                    MapKitFactory.getInstance().onStart()
+                    mapView.onStart()
+                }
+                Lifecycle.Event.ON_STOP -> {
+                    mapView.onStop()
+                    MapKitFactory.getInstance().onStop()
+                }
+                else -> {}
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+
         onDispose {
-            mapView.onStop()
-            MapKitFactory.getInstance().onStop()
+            lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
 
     AndroidView(
         modifier = modifier,
-        factory = {
-            mapView.apply {
-                mapWindow.map.move(
-                    CameraPosition(point, 16.0f, 0.0f, 0.0f)
-                )
-                mapWindow.map.mapObjects.addPlacemark().apply {
-                    geometry = point
-                }
+        factory = { mapView },
+        update = { view ->
+            view.mapWindow.map.move(
+                CameraPosition(point, 16.0f, 0.0f, 0.0f)
+            )
+            view.mapWindow.map.mapObjects.clear()
+            view.mapWindow.map.mapObjects.addPlacemark().apply {
+                geometry = point
             }
         }
     )

@@ -1,12 +1,21 @@
 package com.example.expensetracker.feature.list
 
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -15,38 +24,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.expensetracker.domain.model.Expense
-import androidx.hilt.navigation.compose.hiltViewModel
-
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.expensetracker.domain.model.Expense
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import android.view.ViewGroup
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpenseListScreen(
     viewModel: ExpenseListViewModel = hiltViewModel(),
     onAddExpenseClick: () -> Unit,
-    onExpenseClick: (Expense) -> Unit,
-    onAboutClick: () -> Unit
+    onExpenseClick: (Expense) -> Unit
 ) {
     val expenses by viewModel.allExpenses.collectAsState()
     val totalAmount by viewModel.totalAmount.collectAsState()
-    var selectedCategory by remember { mutableStateOf("All") }
+    var selectedCategoryDisplay by remember { mutableStateOf("Все") }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Expense Tracker") },
-                actions = {
-                    IconButton(onClick = onAboutClick) {
-                        Icon(Icons.Default.Info, contentDescription = "About")
-                    }
-                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -59,50 +59,72 @@ fun ExpenseListScreen(
             }
         }
     ) { paddingValues ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .padding(paddingValues)
-                .fillMaxSize()
+                .fillMaxSize(),
+            contentPadding = PaddingValues(bottom = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            TotalAmountCard(totalAmount)
+            item {
+                TotalAmountCard(totalAmount)
+            }
+
+            item {
+                AiAnalysisView(
+                    analysis = viewModel.aiAnalysis.collectAsState().value,
+                    isLoading = viewModel.isAiLoading.collectAsState().value,
+                    onRefresh = { viewModel.refreshAiAnalysis() }
+                )
+            }
             
             if (expenses.isNotEmpty()) {
-                Box(modifier = Modifier.height(200.dp).fillMaxWidth()) {
-                    ExpensePieChart(expenses)
+                item {
+                    Box(modifier = Modifier.height(200.dp).fillMaxWidth().padding(horizontal = 16.dp)) {
+                        ExpensePieChart(expenses)
+                    }
                 }
             }
 
-            val categoryMap = mapOf(
-                "All" to "Все",
-                "Food" to "Еда",
-                "Transport" to "Транспорт",
-                "Entertainment" to "Развлечения",
-                "Health" to "Здоровье",
-                "Other" to "Прочее"
-            )
+            item {
+                val categoryMap = mapOf(
+                    "All" to "Все",
+                    "Food" to "Еда",
+                    "Transport" to "Транспорт",
+                    "Entertainment" to "Развлечения",
+                    "Health" to "Здоровье",
+                    "Other" to "Прочее"
+                )
 
-            var selectedCategoryDisplay by remember { mutableStateOf("Все") }
-
-            CategoryFilter(
-                selectedCategory = selectedCategoryDisplay,
-                onCategorySelected = { display ->
-                    selectedCategoryDisplay = display
-                    val internal = categoryMap.entries.find { it.value == display }?.key ?: "All"
-                    viewModel.filterByCategory(internal)
-                }
-            )
+                CategoryFilter(
+                    selectedCategory = selectedCategoryDisplay,
+                    onCategorySelected = { display ->
+                        selectedCategoryDisplay = display
+                        val internal = categoryMap.entries.find { it.value == display }?.key ?: "All"
+                        viewModel.filterByCategory(internal)
+                    }
+                )
+            }
             
             if (expenses.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("Расходы не найдены", style = MaterialTheme.typography.bodyLarge)
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 32.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text("Расходы не найдены", style = MaterialTheme.typography.bodyLarge)
+                    }
                 }
             } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(expenses) { expense ->
+                items(expenses, key = { it.id }) { expense ->
+                    AnimatedVisibility(
+                        visible = true,
+                        enter = fadeIn() + slideInVertically(),
+                        exit = fadeOut(),
+                        modifier = Modifier.animateItem().padding(horizontal = 16.dp)
+                    ) {
                         ExpenseItem(
                             expense = expense,
                             onClick = { onExpenseClick(expense) },
@@ -113,6 +135,30 @@ fun ExpenseListScreen(
             }
         }
     }
+}
+
+@Composable
+fun AiAnalysisView(
+    analysis: String,
+    isLoading: Boolean,
+    onRefresh: () -> Unit
+) {
+    AndroidView(
+        factory = { context ->
+            android.view.LayoutInflater.from(context).inflate(R.layout.layout_ai_analysis, null).apply {
+                findViewById<Button>(R.id.refreshAi).setOnClickListener {
+                    onRefresh()
+                }
+            }
+        },
+        update = { view ->
+            view.findViewById<TextView>(R.id.aiContent).text = if (isLoading) "Загрузка..." else analysis
+            view.findViewById<Button>(R.id.refreshAi).isEnabled = !isLoading
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    )
 }
 
 @Composable
@@ -229,7 +275,13 @@ fun ExpenseItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
+            .clickable(onClick = onClick)
+            .animateContentSize(
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessLow
+                )
+            ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(

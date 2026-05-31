@@ -1,2 +1,6 @@
 R_DEF: Internal format may change without notice
 local
+id aiContent
+id aiTitle
+id refreshAi
+layout layout_ai_analysis

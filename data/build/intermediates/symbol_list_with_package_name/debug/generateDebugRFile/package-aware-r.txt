@@ -1,1 +1,4 @@
 com.example.expensetracker.data
+raw russian_trusted_root_ca
+raw russian_trusted_root_ca_gost_2025
+raw russian_trusted_sub_ca

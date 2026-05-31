@@ -3,7 +3,6 @@ package com.example.expensetracker.core.auth
 import android.app.Activity
 
 interface AuthService {
-    suspend fun loginWithVk(activity: Activity): AuthResult
     suspend fun loginWithYandex(activity: Activity): AuthResult
     suspend fun loginAsGuest(): AuthResult
     fun logout()
@@ -18,7 +17,7 @@ data class User(
     val provider: AuthProvider
 )
 
-enum class AuthProvider { VK, YANDEX, GUEST }
+enum class AuthProvider { YANDEX, GUEST }
 
 sealed class AuthResult {
     data class Success(val user: User) : AuthResult()

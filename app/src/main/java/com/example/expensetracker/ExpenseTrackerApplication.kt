@@ -10,6 +10,13 @@ import io.appmetrica.analytics.AppMetricaConfig
 import com.example.expensetracker.BuildConfig
 import com.yandex.mapkit.MapKitFactory
 
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.example.expensetracker.worker.ExpenseReminderWorker
+import java.util.concurrent.TimeUnit
+
 @HiltAndroidApp
 class ExpenseTrackerApplication : Application() {
     override fun onCreate() {
@@ -17,7 +24,20 @@ class ExpenseTrackerApplication : Application() {
         initAppMetrica()
         if (isMainProcess()) {
             initMapKit()
+            scheduleReminders()
         }
+    }
+
+    private fun scheduleReminders() {
+        val workRequest = PeriodicWorkRequestBuilder<ExpenseReminderWorker>(24, TimeUnit.HOURS)
+            .setConstraints(Constraints.Builder().setRequiresBatteryNotLow(true).build())
+            .build()
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "ExpenseReminder",
+            ExistingPeriodicWorkPolicy.KEEP,
+            workRequest
+        )
     }
 
     private fun isMainProcess(): Boolean {

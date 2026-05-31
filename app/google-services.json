@@ -23,6 +23,44 @@
           "other_platform_oauth_client": []
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:750903866409:android:c45e6866df3fb27b921839",
+        "android_client_info": {
+          "package_name": "com.example.expensetracker.free"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBA_CxdexR7dDof7ve97FB-90HVYnD9-bc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:750903866409:android:c45e6866df3fb27b921840",
+        "android_client_info": {
+          "package_name": "com.example.expensetracker.paid"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBA_CxdexR7dDof7ve97FB-90HVYnD9-bc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
     }
   ],
   "configuration_version": "1"

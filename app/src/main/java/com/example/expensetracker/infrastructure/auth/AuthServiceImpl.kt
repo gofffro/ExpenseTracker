@@ -40,7 +40,6 @@ class AuthServiceImpl @Inject constructor(
         pendingLogin = deferred
 
         try {
-            // Используем контракт из SDK для создания Intent
             val intent = sdk.contract.createIntent(context, YandexAuthLoginOptions())
             activity.startActivityForResult(intent, REQUEST_CODE_YANDEX)
         } catch (e: Exception) {
@@ -48,10 +47,6 @@ class AuthServiceImpl @Inject constructor(
         }
 
         return deferred.await()
-    }
-
-    override suspend fun loginWithVk(activity: Activity): AuthResult {
-        return AuthResult.Error("VK Login not implemented")
     }
 
     override suspend fun loginAsGuest(): AuthResult {
@@ -104,7 +99,6 @@ class AuthServiceImpl @Inject constructor(
         val email = prefs.getString("user_email", null)
         val providerStr = prefs.getString("user_provider", null)
         val provider = when (providerStr) {
-            "VK" -> AuthProvider.VK
             "GUEST" -> AuthProvider.GUEST
             else -> AuthProvider.YANDEX
         }

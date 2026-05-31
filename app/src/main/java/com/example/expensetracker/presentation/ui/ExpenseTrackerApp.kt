@@ -11,7 +11,6 @@ import com.example.expensetracker.feature.add.AddExpenseScreen
 import com.example.expensetracker.feature.detail.ExpenseDetailScreen
 import com.example.expensetracker.feature.list.ExpenseListScreen
 import com.example.expensetracker.feature.auth.presentation.LoginScreen
-import com.example.expensetracker.feature.about.presentation.AboutScreen
 
 @Composable
 fun ExpenseTrackerApp(
@@ -35,14 +34,7 @@ fun ExpenseTrackerApp(
                 onAddExpenseClick = { navController.navigate(Screen.AddExpense.route) },
                 onExpenseClick = { expense ->
                     navController.navigate(Screen.ExpenseDetail.createRoute(expense.id))
-                },
-                onAboutClick = { navController.navigate(Screen.About.route) }
-            )
-        }
-        composable(Screen.About.route) {
-            AboutScreen(
-                analyticsService = analyticsService,
-                remoteConfigService = remoteConfigService
+                }
             )
         }
         composable(Screen.AddExpense.route) {

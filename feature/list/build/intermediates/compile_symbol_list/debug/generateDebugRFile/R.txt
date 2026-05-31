@@ -1,0 +1,4 @@
+int id aiContent 0x0
+int id aiTitle 0x0
+int id refreshAi 0x0
+int layout layout_ai_analysis 0x0

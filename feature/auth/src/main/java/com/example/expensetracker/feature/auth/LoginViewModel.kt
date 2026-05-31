@@ -38,14 +38,6 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun loginWithVk(activity: Activity) {
-        crashReporter.log("Login with VK initiated")
-        viewModelScope.launch {
-            val result = authService.loginWithVk(activity)
-            handleResult(result, "vk")
-        }
-    }
-
     fun loginWithYandex(activity: Activity) {
         crashReporter.log("Login with Yandex initiated")
         viewModelScope.launch {

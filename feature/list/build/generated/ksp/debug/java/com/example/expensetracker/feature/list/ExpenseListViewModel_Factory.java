@@ -1,6 +1,7 @@
 package com.example.expensetracker.feature.list;
 
 import com.example.expensetracker.core.analytics.AnalyticsService;
+import com.example.expensetracker.domain.usecase.AnalyzeExpensesUseCase;
 import com.example.expensetracker.domain.usecase.DeleteExpenseUseCase;
 import com.example.expensetracker.domain.usecase.GetExpensesUseCase;
 import com.example.expensetracker.domain.usecase.GetTotalAmountUseCase;
@@ -32,34 +33,39 @@ public final class ExpenseListViewModel_Factory implements Factory<ExpenseListVi
 
   private final Provider<DeleteExpenseUseCase> deleteExpenseUseCaseProvider;
 
+  private final Provider<AnalyzeExpensesUseCase> analyzeExpensesUseCaseProvider;
+
   private final Provider<AnalyticsService> analyticsServiceProvider;
 
   public ExpenseListViewModel_Factory(Provider<GetExpensesUseCase> getExpensesUseCaseProvider,
       Provider<GetTotalAmountUseCase> getTotalAmountUseCaseProvider,
       Provider<DeleteExpenseUseCase> deleteExpenseUseCaseProvider,
+      Provider<AnalyzeExpensesUseCase> analyzeExpensesUseCaseProvider,
       Provider<AnalyticsService> analyticsServiceProvider) {
     this.getExpensesUseCaseProvider = getExpensesUseCaseProvider;
     this.getTotalAmountUseCaseProvider = getTotalAmountUseCaseProvider;
     this.deleteExpenseUseCaseProvider = deleteExpenseUseCaseProvider;
+    this.analyzeExpensesUseCaseProvider = analyzeExpensesUseCaseProvider;
     this.analyticsServiceProvider = analyticsServiceProvider;
   }
 
   @Override
   public ExpenseListViewModel get() {
-    return newInstance(getExpensesUseCaseProvider.get(), getTotalAmountUseCaseProvider.get(), deleteExpenseUseCaseProvider.get(), analyticsServiceProvider.get());
+    return newInstance(getExpensesUseCaseProvider.get(), getTotalAmountUseCaseProvider.get(), deleteExpenseUseCaseProvider.get(), analyzeExpensesUseCaseProvider.get(), analyticsServiceProvider.get());
   }
 
   public static ExpenseListViewModel_Factory create(
       Provider<GetExpensesUseCase> getExpensesUseCaseProvider,
       Provider<GetTotalAmountUseCase> getTotalAmountUseCaseProvider,
       Provider<DeleteExpenseUseCase> deleteExpenseUseCaseProvider,
+      Provider<AnalyzeExpensesUseCase> analyzeExpensesUseCaseProvider,
       Provider<AnalyticsService> analyticsServiceProvider) {
-    return new ExpenseListViewModel_Factory(getExpensesUseCaseProvider, getTotalAmountUseCaseProvider, deleteExpenseUseCaseProvider, analyticsServiceProvider);
+    return new ExpenseListViewModel_Factory(getExpensesUseCaseProvider, getTotalAmountUseCaseProvider, deleteExpenseUseCaseProvider, analyzeExpensesUseCaseProvider, analyticsServiceProvider);
   }
 
   public static ExpenseListViewModel newInstance(GetExpensesUseCase getExpensesUseCase,
       GetTotalAmountUseCase getTotalAmountUseCase, DeleteExpenseUseCase deleteExpenseUseCase,
-      AnalyticsService analyticsService) {
-    return new ExpenseListViewModel(getExpensesUseCase, getTotalAmountUseCase, deleteExpenseUseCase, analyticsService);
+      AnalyzeExpensesUseCase analyzeExpensesUseCase, AnalyticsService analyticsService) {
+    return new ExpenseListViewModel(getExpensesUseCase, getTotalAmountUseCase, deleteExpenseUseCase, analyzeExpensesUseCase, analyticsService);
   }
 }

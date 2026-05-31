@@ -7,9 +7,11 @@ import com.example.expensetracker.domain.model.Expense
 import com.example.expensetracker.domain.usecase.GetExpensesUseCase
 import com.example.expensetracker.domain.usecase.GetTotalAmountUseCase
 import com.example.expensetracker.domain.usecase.DeleteExpenseUseCase
+import com.example.expensetracker.domain.usecase.AnalyzeExpensesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,6 +21,7 @@ class ExpenseListViewModel @Inject constructor(
     private val getExpensesUseCase: GetExpensesUseCase,
     private val getTotalAmountUseCase: GetTotalAmountUseCase,
     private val deleteExpenseUseCase: DeleteExpenseUseCase,
+    private val analyzeExpensesUseCase: AnalyzeExpensesUseCase,
     private val analyticsService: AnalyticsService
 ) : ViewModel() {
 
@@ -27,6 +30,12 @@ class ExpenseListViewModel @Inject constructor(
 
     private val _totalAmount = MutableStateFlow<Double>(0.0)
     val totalAmount: StateFlow<Double> = _totalAmount
+
+    private val _aiAnalysis = MutableStateFlow<String>("Нажмите обновить для анализа...")
+    val aiAnalysis: StateFlow<String> = _aiAnalysis.asStateFlow()
+
+    private val _isAiLoading = MutableStateFlow(false)
+    val isAiLoading: StateFlow<Boolean> = _isAiLoading.asStateFlow()
 
     init {
         loadExpenses()
@@ -67,6 +76,14 @@ class ExpenseListViewModel @Inject constructor(
             getExpensesUseCase(category).collectLatest {
                 _allExpenses.value = it
             }
+        }
+    }
+
+    fun refreshAiAnalysis() {
+        viewModelScope.launch {
+            _isAiLoading.value = true
+            _aiAnalysis.value = analyzeExpensesUseCase(_allExpenses.value)
+            _isAiLoading.value = false
         }
     }
 }
