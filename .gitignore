@@ -14,3 +14,7 @@
 .cxx
 local.properties
 **/build/
+
+# Firebase and Services
+app/google-services.json
+yandex-services.json
