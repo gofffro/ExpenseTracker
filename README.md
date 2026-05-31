@@ -54,16 +54,16 @@ ExpenseTracker позволяет пользователям записыват�
 
 ## Скриншоты
 (Место для скриншотов)
-- Экран авторизации
+- Экран авторизации <br/>
   <img width="365" height="576" alt="image" src="https://github.com/user-attachments/assets/ee08de8c-adbc-4ace-9bc6-f303303deef2" />
 
-- Список расходов с графиком
+- Список расходов с графиком <br/>
   <img width="379" height="775" alt="image" src="https://github.com/user-attachments/assets/a76e0d29-9e3a-4234-8924-0e91ea545f77" />
 
-- Добавление расхода
+- Добавление расхода <br/>
 - <img width="379" height="776" alt="image" src="https://github.com/user-attachments/assets/55e3c80a-104e-41ae-be15-7565c5e440e0" />
 
-- Детали расхода
+- Детали расхода <br/>
   <img width="379" height="410" alt="image" src="https://github.com/user-attachments/assets/770a3542-cc41-48bf-98bc-be79dcc4af49" />
 
   <img width="379" height="775" alt="image" src="https://github.com/user-attachments/assets/961ea788-9ac4-41d0-b8ce-bba179732e5f" />
