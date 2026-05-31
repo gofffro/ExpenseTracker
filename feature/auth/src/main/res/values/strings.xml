@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="vk_app_id">YOUR_VK_APP_ID</string>
+    <string name="com_vk_sdk_AppId">YOUR_VK_APP_ID</string>
+</resources>
